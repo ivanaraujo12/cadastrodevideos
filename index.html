@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Aluno</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #2980b9, #3498db);
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .header {
+            background-color: #3498db;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-bar {
+            background-color: #2980b9;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-bar-toggle {
+            display: none;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .menu-bar-options {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap; /* Permite que os itens fluam para a próxima linha em telas menores */
+            gap: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out; /* Adiciona uma transição suave para a altura máxima */
+        }
+
+        .menu-bar-options.open {
+            max-height: 200px; /* Defina a altura máxima desejada para o menu suspenso */
+        }
+
+        .menu-bar-options li {
+            position: relative;
+        }
+
+        .menu-bar-options li a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            padding: 10px;
+            display: block;
+            transition: color 0.3s;
+        }
+
+        .menu-bar-options li:hover .sub-menu {
+            display: block;
+        }
+
+        .sub-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #2980b9;
+            min-width: 160px;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .sub-menu li {
+            padding: 10px;
+        }
+
+        .sub-menu li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+        }
+
+        .curso {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, opacity 0.3s;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .curso.hidden {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        .curso h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .video-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .video-item {
+            margin: 10px 0;
+        }
+
+        .video-link {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .video-link:hover {
+            color: #2980b9;
+        }
+
+        .notes {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            transition: transform 0.3s, opacity 0.3s;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notes.hidden {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        .notes h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .notes textarea {
+            width: 100%;
+            height: 150px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        @media screen and (max-width: 768px) {
+            .menu-bar-toggle {
+                display: block;
+            }
+
+            .menu-bar-options {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                background-color: #2980b9;
+                border-radius: 0 0 10px 10px;
+                z-index: 1;
+                max-height: initial; /* Remove a altura máxima para mostrar os itens na coluna */
+            }
+
+            .menu-bar-toggle:checked + .menu-bar-options {
+                display: flex;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Área do Aluno</h1>
+        <input type="checkbox" id="menu-toggle" class="menu-bar-toggle">
+        <label for="menu-toggle">&#9776;</label>
+        <ul class="menu-bar-options">
+            <li>
+                <a href="#" class="course-toggle">Curso 1</a>
+                <ul class="sub-menu course-menu">
+                    <li><a href="#">Vídeo 1</a></li>
+                    <li><a href="#">Vídeo 2</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="course-toggle">Curso 2</a>
+                <ul class="sub-menu course-menu">
+                    <li><a href="#">Vídeo 1</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="course-toggle">Curso 3</a>
+                <ul class="sub-menu course-menu">
+                    <li><a href="#">Vídeo 1</a></li>
+                    <li><a href="#">Vídeo 2</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="course-toggle">Curso 4</a>
+                <ul class="sub-menu course-menu">
+                    <li><a href="#">Vídeo 1</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="course-toggle">Curso 5</a>
+                <ul class="sub-menu course-menu">
+                    <li><a href="#">Vídeo 1</a></li>
+                    <li><a href="#">Vídeo 2</a></li>
+                    <li><a href="#">Vídeo 3</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="notes-toggle">Anotações</a>
+            </li>
+        </ul>
+    </div>
+    <div class="container">
+        <div class="curso course-1">
+            <h2>Curso 1</h2>
+            <ul class="video-list">
+                <li class="video-item"><a class="video-link" href="#">Vídeo 1</a></li>
+                <li class="video-item"><a class="video-link" href="#">Vídeo 2</a></li>
+            </ul>
+        </div>
+        <div class="curso course-2">
+            <h2>Curso 2</h2>
+            <ul class="video-list">
+                <li class="video-item"><a class="video-url" href="#">Vídeo 1</a></li>
+            </ul>
+        </div>
+        <div class="curso course-3">
+            <h2>Curso 3</h2>
+            <ul class="video-list">
+                <li class="video-item"><a class="video-link" href="#">Vídeo 1</a></li>
+                <li class="video-item"><a class="video-link" href="#">Vídeo 2</a></li>
+            </ul>
+        </div>
+        <div class="curso course-4">
+            <h2>Curso 4</h2>
+            <ul class="video-list">
+                <li class="video-item"><a class="video-url" href="#">Vídeo 1</a></li>
+            </ul>
+        </div>
+        <div class="curso course-5">
+            <h2>Curso 5</h2>
+            <ul class="video-list">
+                <li class="video-item"><a class="video-link" href="#">Vídeo 1</a></li>
+                <li class="video-item"><a class="video-link" href="#">Vídeo 2</a></li>
+                <li class="video-item"><a class="video-link" href="#">Vídeo 3</a></li>
+            </ul>
+        </div>
+        <div class="notes">
+            <h2>Anotações</h2>
+            <textarea id="notes-textarea" placeholder="Suas anotações aqui..."></textarea>
+        </div>
+        <button id="save-notes-button" class="button">Salvar Anotações</button>
+        <div id="result-message"></div>
+    </div>
+
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuOptions = document.querySelector('.menu-bar-options');
+        const courseLinks = document.querySelectorAll('.course-toggle');
+        const courseMenus = document.querySelectorAll('.course-menu');
+        const notesToggle = document.querySelector('.notes-toggle');
+        const notesSection = document.querySelector('.notes');
+        const notesTextarea = document.getElementById('notes-textarea');
+        const saveNotesButton = document.getElementById('save-notes-button');
+        const resultMessage = document.getElementById('result-message');
+
+        // Toggle do menu
+        menuToggle.addEventListener('change', () => {
+            menuOptions.style.maxHeight = menuToggle.checked ? '200px' : '0';
+        });
+
+        // Toggle para mostrar/ocultar cursos
+        courseLinks.forEach((link, index) => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const courseMenu = courseMenus[index];
+                if (courseMenu.style.display === 'block') {
+                    courseMenu.style.transform = 'translateY(20px)';
+                    courseMenu.style.opacity = '0';
+                    setTimeout(() => {
+                        courseMenu.style.display = 'none';
+                    }, 300);
+                } else {
+                    courseMenu.style.display = 'block';
+                    setTimeout(() => {
+                        courseMenu.style.transform = 'translateY(0)';
+                        courseMenu.style.opacity = '1';
+                    }, 0);
+                }
+            });
+        });
+
+        // Toggle para mostrar/ocultar anotações
+        notesToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (notesSection.style.display === 'block') {
+                notesSection.style.transform = 'translateY(20px)';
+                notesSection.style.opacity = '0';
+                setTimeout(() => {
+                    notesSection.style.display = 'none';
+                }, 300);
+            } else {
+                notesSection.style.display = 'block';
+                setTimeout(() => {
+                    notesSection.style.transform = 'translateY(0)';
+                    notesSection.style.opacity = '1';
+                }, 0);
+            }
+        });
+
+        // Evento para salvar anotações
+        saveNotesButton.addEventListener('click', () => {
+            const notes = notesTextarea.value;
+            if (notes.trim() !== '') {
+                resultMessage.textContent = 'Anotações salvas com sucesso!';
+            } else {
+                resultMessage.textContent = 'Por favor, insira suas anotações antes de salvar.';
+            }
+        });
+    </script>
+</body>
+</html>
